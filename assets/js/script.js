@@ -3,47 +3,40 @@ let userFormEl = document.querySelector("#user-form");
 let locationInputEl = document.querySelector("#location");
 
 // location list variables
-let locationResults = document.querySelector("#location-search-results");
+let locationResultsEl = document.querySelector("#location-search-results");
 
 // Main weather content variables
-let locationName = document.querySelector(".location-name");
-let todaysDate = document.querySelector(".date");
-let weatherIcon = document.querySelector(".icon");
-let locationTemp = document.querySelector(".location-temp");
-let locationHumidity = document.querySelector(".location-humid");
-let locationWind = document.querySelector(".location-wind");
-let locationUv = document.querySelector(".location-uv");
+let locationNameEl = document.querySelector(".location-name");
+let todaysDateEl = document.querySelector(".date");
+let weatherIconEl = document.querySelector(".icon");
+let locationTempEl = document.querySelector(".location-temp");
+let locationHumidityEl = document.querySelector(".location-humid");
+let locationWindEl = document.querySelector(".location-wind");
+let locationUvEl = document.querySelector(".location-uv");
+let locationIconEl = document.querySelector(".icon");
 
 // 5 day forecast variables
-let fiveDayForecast = document.querySelector("#five-day-forecast");
+let fiveDayForecastEl = document.querySelector("#five-day-forecast");
 
 // API key variable and Unit option
 let apiKey = "&appid=42ed08cbc3e418fb0ee6724facf8348a&units=imperial"
 
-
-
-
 // form submit
-let formSubmitHandler = function(event) {
-    event.preventDefault();
 
-    // get value from location input
-    let locationName = locationInputEl.value.trim();
 
-    if (locationName) {
-        getLocation(locationName);
-        locationInputEl.value = "";
-    }
-    else {
-        alert("Please enter a location");
-    }
+let getCityLocation = function(city) {
+    // format weather API url
+    let weatherApiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + apiKey;
+
+    // make a request to the url
+    fetch(weatherApiUrl)
+    .then(function(response) {
+        response.json().then(function(data) {
+            console.log(data);
+        });
+       
+    });
 };
 
-// get the location from API
-let getLocation = function(location) {
-    // format the weather API
-    let weatherUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + location + apiKey;
-}
 
-// button event listener
-userFormEl.addEventListener("submit", formSubmitHandler);
+getCityLocation("Denver");
