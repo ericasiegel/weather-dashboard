@@ -21,3 +21,7 @@ header {
 .day-weather {
     padding-top: 20px;
 }
+
+.main-weather {
+    color: black;
+}

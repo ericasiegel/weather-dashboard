@@ -24,8 +24,8 @@
                 <!-- search content -->
                 <div class="input-group mb-3">
                     Search For A City:
-                      <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Location" aria-label="Recipient's username" aria-describedby="button-addon2">
+                      <div class="input-group mb-3" id="user-form">
+                        <input name="location" id="location" type="text" class="form-control" placeholder="Location" aria-label="city name" aria-describedby="button-addon2">
                         <div class="input-group-append">
                           <button class="btn btn-outline-secondary btn-primary" type="button" id="button-addon2"><span class="text-light oi oi-magnifying-glass"></span></button>
                         </div>
@@ -43,8 +43,25 @@
             <!-- weather content -->
             <div class="col-9 weather-content">
                 <div class="main-weather list-group-item">
-                    Main Weather HERE
+                    <div class="row">
+                        <h2 class="location-name">City Name</h2>
+                        <h2 class="date"></h2>
+                        <img class="icon"></img>
+                    </div>
+                    <div class="row">
+                        <p class="location-temp">Temperature:</p>
+                    </div>
+                    <div class="row">
+                        <p class="location-humid">Humidity:</p>
+                    </div>
+                    <div class="row">
+                        <p class="location-wind">Wind Speed:</p>
+                    </div>                       
+                    <div class="row">
+                        <p class="location-uv">UV Index:</p>
+                    </div> 
                 </div>
+                <!-- 5 day Forecast -->
                 <div class="day-weather">
                     <h5>5 Day Forecast:</h5>
                     <div id="five-day-forecast"></div>
@@ -52,6 +69,6 @@
             </div>
         </div>
       </div>
-    
+    <script src="./assets/js/script.js"></script>
 </body>
 </html>
