@@ -71,7 +71,8 @@ let getCityLocation = function(city) {
                     let year = date.getFullYear();
                     dateEl.textContent = month + " / " + day + " / " + year;
                     
-                    // 5 day forecast
+                    // 5 day forecast call
+                    forecast(data);
                     
                 })
                 
@@ -111,6 +112,14 @@ let displayCityLocation = function(city) {
     cityBtn.textContent = city.name;
     
 };
+
+let forecast = function() {
+    for (let i = 0; i< forecast.length; i++) {
+      forecast[i].innerHTML = "";
+      
+       
+    }
+}
 
 
 // form event listeners
