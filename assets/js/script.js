@@ -30,6 +30,7 @@ let getCityLocation = function(city) {
 
             // display the City Names in the left column
             displayCityLocation(data);
+            // dailyForecast(data);
 
         // main city weather
             // City Name, temperature, humidity, wind speed
@@ -65,40 +66,14 @@ let getCityLocation = function(city) {
                     // current city date
                     let cityDate = data.current.dt;
                     let date = new Date(cityDate * 1000)
-                    console.log(date);
+                    // console.log(date);
                     let day = date.getDate();
                     let month = date.getMonth();
                     let year = date.getFullYear();
                     dateEl.textContent = month + " / " + day + " / " + year;
                     
                     // 5 day forecast call
-                    for (let i = 0; i < response.length; i++) {
-
-                        // daily weather container
-                        let dailyEl = document.createElement("div");
-                        dailyEl.classList = "card text-white bg-primary mb-3";
-
-                        // daily date
-                        let dDate = response[i].daily[i].dt;
-                        let fDate = new Date(dDate * 1000)
-                        let day = fDate.getDate();
-                        let month = fDate.getMonth();
-                        let year = fDate.getFullYear();
-                        let dailyDate = document.createElement("p");
-                        dailyDate.textContent = month + " / " + day + " / " + year;
-
-                        //create span to hold data
-                        let dailyData = document.createElement("span");
-                        dailyData.textContent = dailyDate;
-
-                        // append to container
-                        dailyEl.appendChild(dailyData);
-
-                        // append to page
-                        fiveDayForecastEl.appendChild(dailyEl);
-                        
-                    }
-                    
+                    // forecast(data);
                 })
                 
             })
@@ -118,6 +93,7 @@ var formSubmitHandler = function(event) {
     let cityLocation = locationInputEl.value.trim();
     if (cityLocation) {
         getCityLocation(cityLocation);
+        dailyForecast(cityLocation);
         locationInputEl.value = "";
     }
     else {
@@ -132,54 +108,71 @@ let displayCityLocation = function(city) {
     cityBtn.setAttribute("id", city.name);
     cityBtn.setAttribute("class", "list-group-item");
     cityBtn.setAttribute("onclick", `getCityLocation("${city.name}")`);
+    cityBtn.setAttribute("onclick", `dailyForecast("${city.name}")`);
     let cityNameBtn = document.querySelector(".list-group");
     cityNameBtn.appendChild(cityBtn);
     cityBtn.textContent = city.name;
     
 };
 
-// let forecast = function() {
-//     for (let i = 0; i< forecast.length; i+8) {
-//     //   forecast[i].innerHTML = "";
+let dailyForecast = function(city) {
+    // dailyForecast.innerHTML = "";
+    let forecastApiUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + apiKey;
 
-        // daily date
-        // let dDate = forecast[i].daily[0].dt;
-        // let fDate = new Date(dDate * 1000)
-        // let day = fDate.getDate();
-        // let month = fDate.getMonth();
-        // let year = fDate.getFullYear();
-        // let dailyDate = document.createElement("p");
-        // dailyDate.textContent = month + " / " + day + " / " + year;
+    // make a request to the url
+    fetch(forecastApiUrl)
+    .then(function(response){
+        response.json().then(function(data) {
+            fiveDayForecastEl.innerHTML = "";
+            for (let i = 0; i < data.list.length; i+=8) {
+                let weatherEl = data.list[i];
+                
+                // daily date
+                let dDate = weatherEl.dt;
+                let fDate = new Date(dDate * 1000)
+                let day = fDate.getDate();
+                let month = fDate.getMonth();
+                let year = fDate.getFullYear();
+                let dailyDate = document.createElement("p");
+                dailyDate.textContent = month + " / " + day + " / " + year;
 
-//         // daily icon
-//         let dIcon = forecast[i].daily[0].weather[0].icon;
-//             let diconurl =  "http://openweathermap.org/img/w/" + dIcon + ".png";
-//             let dailyIcon = document.createElement("img");
-//             dailyIcon.setAttribute("src", diconurl);
+                // daily icon
+                let dIcon = weatherEl.weather[0].icon;
+                    let diconurl =  "http://openweathermap.org/img/w/" + dIcon + ".png";
+                    let dailyIcon = document.createElement("img");
+                    dailyIcon.setAttribute("src", diconurl);
+                    dailyIcon.setAttribute("style", "max-width: 5rem;");
 
-//         // daily temperature
-//         let dTemp = forecast[i].daily[0].temp.day;
-//         let dailyTemp = document.createElement("p");
-//         dailyTemp.textContent = dTemp + "°F";
+                // daily temperature
+                let dTemp = weatherEl.main.temp;
+                let dailyTemp = document.createElement("p");
+                dailyTemp.textContent = dTemp + "°F";
 
-//         // daily humidity
-//         let dhumid = forecast[i].daily[0].humidity;
-//         let dailyHumid = document.createElement("p");
-//         dailyHumid.textContent = dhumid + "%";
+                // daily humidity
+                let dhumid = weatherEl.main.humidity;
+                let dailyHumid = document.createElement("p");
+                dailyHumid.textContent = dhumid + "%";
 
-//         let dailycard = document.createElement("div");
-//         dailycard.setAttribute("class", "card text-white bg-primary mb-3");
-//         dailycard.setAttribute("style", "max=width: 18rem;");
+                let dailycard = document.createElement("div");
+                dailycard.setAttribute("class", "card text-white bg-primary mb-3");
+                dailycard.setAttribute("style", "max-width: 18rem; padding: 10px;");
 
-//         fiveDayForecastEl.appendChild(dailycard);
-//         dailycard.appendChild(dailyDate);
-//         dailycard.appendChild(dailyIcon);
-//         dailycard.appendChild(dailyTemp);
-//         dailycard.appendChild(dailyHumid);
-       
-//     }
-// }
-// console.log(forecast);
+              
+               
+                dailycard.appendChild(dailyDate);
+                dailycard.appendChild(dailyIcon);
+                dailycard.appendChild(dailyTemp);
+                dailycard.appendChild(dailyHumid);
+                
+                fiveDayForecastEl.appendChild(dailycard);
+               
+
+            }
+        })
+    })
+}
+
+    
 
 // form event listeners
 userFormEl.addEventListener("submit", formSubmitHandler);
