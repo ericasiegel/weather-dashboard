@@ -8,6 +8,8 @@ let locationResultsEl = document.querySelector(".list-group");
 
 // Main weather content variables
 let locationWeatherEl = document.querySelector(".main-weather");
+let uvIndex = document.querySelector("#city-uv");
+let dateEl = document.querySelector("#city-date");
 
 
 // 5 day forecast variables
@@ -25,12 +27,62 @@ let getCityLocation = function(city) {
     fetch(weatherApiUrl)
     .then(function(response) {
         response.json().then(function(data) {
+
+            // display the City Names in the left column
             displayCityLocation(data);
-            displayCityWeather(data);
+
+        // main city weather
+            // City Name, temperature, humidity, wind speed
+            document.getElementById("city-name").textContent = data.name;
+            document.getElementById("city-temp").textContent = "Temperature: " + data.main.temp + "°F";
+            document.getElementById("city-humid").textContent = "Humidity: " + data.main.humidity + "%";
+            document.getElementById("city-wind").textContent = "Wind Speed: " + data.wind.speed + "MPH";
+            
+            // city weather icon
+            let weatherIcon = data.weather[0].icon;
+            let iconurl =  "http://openweathermap.org/img/w/" + weatherIcon + ".png";
+            document.getElementById("icon").setAttribute("src", iconurl);
+
+            // city UV index
+            let lat = data.coord.lat;
+            let lon = data.coord.lon;
+            fetch("https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&daily&exclude=hourly,minutely" + apiKey)
+            .then(function(response){
+                response.json().then(function(data){
+                    let uvEl = document.createElement("p");
+                        uvEl.textContent ="UV Index: " + data.current.uvi;
+                        if(data.current.uvi > 5){
+                            uvEl.setAttribute('class', 'bg-danger');
+                            }
+                            else if (data.current.uvi>=3){
+                            uvEl.setAttribute('class', 'bg-warning');
+                            } else{
+                            uvEl.setAttribute('class', 'bg-success');
+                            }
+                        uvIndex.innerHTML = "";
+                        uvIndex.appendChild(uvEl);
+
+                    // current city date
+                    let cityDate = data.current.dt;
+                    let date = new Date(cityDate * 1000)
+                    console.log(date);
+                    let day = date.getDate();
+                    let month = date.getMonth();
+                    let year = date.getFullYear();
+                    dateEl.textContent = month + " / " + day + " / " + year;
+                    
+                    // 5 day forecast
+                    
+                })
+                
+            })
         });
        
-    });
-};
+    })
+
+}
+    
+
 
 // form handler to submit user location
 var formSubmitHandler = function(event) {
@@ -57,21 +109,9 @@ let displayCityLocation = function(city) {
     let cityNameBtn = document.querySelector(".list-group");
     cityNameBtn.appendChild(cityBtn);
     cityBtn.textContent = city.name;
+    
 };
 
-// display city's weather
-let displayCityWeather = function(city) {
-    document.getElementById("city-name").textContent = city.name;
-    document.getElementById("city-temp").textContent = "Temperature: " + city.main.temp + "°F";
-    document.getElementById("city-humid").textContent = "Humidity: " + city.main.humidity + "%";
-    document.getElementById("city-wind").textContent = "Wind Speed: " + city.wind.speed + "MPH";
-    document.getElementById("city-uv").textContent = "UV Index: " + city.coord + "%";
-    let weatherIcon = city.weather[0].icon;
-    let iconurl =  "http://openweathermap.org/img/w/" + weatherIcon + ".png";
-    document.getElementById("icon").setAttribute("src", iconurl);
-}
-
-// get UV index
 
 // form event listeners
 userFormEl.addEventListener("submit", formSubmitHandler);
