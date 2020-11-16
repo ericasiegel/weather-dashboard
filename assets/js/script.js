@@ -4,17 +4,11 @@ let locationInputEl = document.querySelector("#location");
 let locationBtnEl = document.querySelector("#button-addon2");
 
 // location list variables
-let locationResultsEl = document.querySelector("#location-search-results");
+let locationResultsEl = document.querySelector(".list-group");
 
 // Main weather content variables
-let locationNameEl = document.querySelector(".location-name");
-let todaysDateEl = document.querySelector(".date");
-let weatherIconEl = document.querySelector(".icon");
-let locationTempEl = document.querySelector(".location-temp");
-let locationHumidityEl = document.querySelector(".location-humid");
-let locationWindEl = document.querySelector(".location-wind");
-let locationUvEl = document.querySelector(".location-uv");
-let locationIconEl = document.querySelector(".icon");
+let locationWeatherEl = document.querySelector(".main-weather");
+
 
 // 5 day forecast variables
 let fiveDayForecastEl = document.querySelector("#five-day-forecast");
@@ -31,7 +25,8 @@ let getCityLocation = function(city) {
     fetch(weatherApiUrl)
     .then(function(response) {
         response.json().then(function(data) {
-            console.log(data);
+            displayCityLocation(data);
+            displayCityWeather(data);
         });
        
     });
@@ -50,9 +45,34 @@ var formSubmitHandler = function(event) {
     else {
         alert("Please enter a city name")
     }
-    console.log(event);
+    
 };
 
+// display the city buttons on left container
+let displayCityLocation = function(city) {
+    let cityBtn = document.createElement("button");
+    cityBtn.setAttribute("id", city.name);
+    cityBtn.setAttribute("class", "list-group-item");
+    cityBtn.setAttribute("onclick", `getCityLocation("${city.name}")`);
+    let cityNameBtn = document.querySelector(".list-group");
+    cityNameBtn.appendChild(cityBtn);
+    cityBtn.textContent = city.name;
+};
 
+// display city's weather
+let displayCityWeather = function(city) {
+    document.getElementById("city-name").textContent = city.name;
+    document.getElementById("city-temp").textContent = "Temperature: " + city.main.temp + "°F";
+    document.getElementById("city-humid").textContent = "Humidity: " + city.main.humidity + "%";
+    document.getElementById("city-wind").textContent = "Wind Speed: " + city.wind.speed + "MPH";
+    document.getElementById("city-uv").textContent = "UV Index: " + city.coord + "%";
+    let weatherIcon = city.weather[0].icon;
+    let iconurl =  "http://openweathermap.org/img/w/" + weatherIcon + ".png";
+    document.getElementById("icon").setAttribute("src", iconurl);
+}
+
+// get UV index
+
+// form event listeners
 userFormEl.addEventListener("submit", formSubmitHandler);
 locationBtnEl.addEventListener("click", formSubmitHandler);
