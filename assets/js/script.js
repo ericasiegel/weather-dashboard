@@ -72,7 +72,32 @@ let getCityLocation = function(city) {
                     dateEl.textContent = month + " / " + day + " / " + year;
                     
                     // 5 day forecast call
-                    forecast(data);
+                    for (let i = 0; i < response.length; i++) {
+
+                        // daily weather container
+                        let dailyEl = document.createElement("div");
+                        dailyEl.classList = "card text-white bg-primary mb-3";
+
+                        // daily date
+                        let dDate = response[i].daily[i].dt;
+                        let fDate = new Date(dDate * 1000)
+                        let day = fDate.getDate();
+                        let month = fDate.getMonth();
+                        let year = fDate.getFullYear();
+                        let dailyDate = document.createElement("p");
+                        dailyDate.textContent = month + " / " + day + " / " + year;
+
+                        //create span to hold data
+                        let dailyData = document.createElement("span");
+                        dailyData.textContent = dailyDate;
+
+                        // append to container
+                        dailyEl.appendChild(dailyData);
+
+                        // append to page
+                        fiveDayForecastEl.appendChild(dailyEl);
+                        
+                    }
                     
                 })
                 
@@ -113,14 +138,48 @@ let displayCityLocation = function(city) {
     
 };
 
-let forecast = function() {
-    for (let i = 0; i< forecast.length; i++) {
-      forecast[i].innerHTML = "";
-      
-       
-    }
-}
+// let forecast = function() {
+//     for (let i = 0; i< forecast.length; i+8) {
+//     //   forecast[i].innerHTML = "";
 
+        // daily date
+        // let dDate = forecast[i].daily[0].dt;
+        // let fDate = new Date(dDate * 1000)
+        // let day = fDate.getDate();
+        // let month = fDate.getMonth();
+        // let year = fDate.getFullYear();
+        // let dailyDate = document.createElement("p");
+        // dailyDate.textContent = month + " / " + day + " / " + year;
+
+//         // daily icon
+//         let dIcon = forecast[i].daily[0].weather[0].icon;
+//             let diconurl =  "http://openweathermap.org/img/w/" + dIcon + ".png";
+//             let dailyIcon = document.createElement("img");
+//             dailyIcon.setAttribute("src", diconurl);
+
+//         // daily temperature
+//         let dTemp = forecast[i].daily[0].temp.day;
+//         let dailyTemp = document.createElement("p");
+//         dailyTemp.textContent = dTemp + "°F";
+
+//         // daily humidity
+//         let dhumid = forecast[i].daily[0].humidity;
+//         let dailyHumid = document.createElement("p");
+//         dailyHumid.textContent = dhumid + "%";
+
+//         let dailycard = document.createElement("div");
+//         dailycard.setAttribute("class", "card text-white bg-primary mb-3");
+//         dailycard.setAttribute("style", "max=width: 18rem;");
+
+//         fiveDayForecastEl.appendChild(dailycard);
+//         dailycard.appendChild(dailyDate);
+//         dailycard.appendChild(dailyIcon);
+//         dailycard.appendChild(dailyTemp);
+//         dailycard.appendChild(dailyHumid);
+       
+//     }
+// }
+// console.log(forecast);
 
 // form event listeners
 userFormEl.addEventListener("submit", formSubmitHandler);
